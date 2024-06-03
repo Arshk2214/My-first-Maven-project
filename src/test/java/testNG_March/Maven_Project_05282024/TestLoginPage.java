@@ -12,6 +12,7 @@ import org.openqa.selenium.WebElement;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class TestLoginPage {
+
 	WebDriver driver = new ChromeDriver();
 
 	@BeforeMethod
@@ -44,6 +45,8 @@ public class TestLoginPage {
 		WebElement confirmPasswordInput = driver
 				.findElement(By.cssSelector("div.text_normal form div.form-group.has-feedback:nth-of-type(9) input"));
 
+		WebElement termsAndConditionLink = driver.findElement(By.xpath("//a[@href=\"/static/terms.html\"]"));
+
 		WebElement checkboxTerms = driver.findElement(By.cssSelector("input[name='agreeTerms']"));
 
 		WebElement submitButton = driver.findElement(By.cssSelector("div.myButton"));
@@ -66,6 +69,8 @@ public class TestLoginPage {
 		passwordInput.sendKeys("Arsh2214.");
 
 		confirmPasswordInput.sendKeys("Arsh2214.");
+
+		termsAndConditionLink.click();
 
 		checkboxTerms.click();
 

@@ -1,11 +1,14 @@
 package testNG_March.Maven_Project_05282024;
 
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.InvalidArgumentException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -13,15 +16,17 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class TestLoginPage {
 
-	WebDriver driver = new ChromeDriver();
+	WebDriver driver;
+
+	String browser = "chrome";
+
+	GenerateRandomData randomdata = new GenerateRandomData();
 
 	@BeforeMethod
 	public void openBrowser() {
 
-		WebDriverManager.chromedriver().setup();
-
+		browserSetup();
 		driver.get("https://classic.freecrm.com/register/");
-
 	}
 
 	@Test
@@ -45,30 +50,33 @@ public class TestLoginPage {
 		WebElement confirmPasswordInput = driver
 				.findElement(By.cssSelector("div.text_normal form div.form-group.has-feedback:nth-of-type(9) input"));
 
-		WebElement termsAndConditionLink = driver.findElement(By.xpath("//a[@href=\"/static/terms.html\"]"));
+		WebElement termsAndConditionLink = driver.findElement(By.cssSelector("a[href='/static/terms.html']"));
 
 		WebElement checkboxTerms = driver.findElement(By.cssSelector("input[name='agreeTerms']"));
 
 		WebElement submitButton = driver.findElement(By.cssSelector("div.myButton"));
 
-		// Perform Actions
 		Select dropdown = new Select(editionInput);
+
+		String randomPassword = randomdata.getPassword();
+
+		String randomEmail = randomdata.getEmail();
 
 		dropdown.selectByVisibleText("Free Edition");
 
-		firstNameInput.sendKeys("Arshdeep");
+		firstNameInput.sendKeys(randomdata.getFirstName());
 
-		lastNameInput.sendKeys("Kaur");
+		lastNameInput.sendKeys(randomdata.getLastName());
 
-		emailInput.sendKeys("arshaujla93@gmail.com");
+		emailInput.sendKeys(randomEmail);
 
-		confirmEmailInput.sendKeys("arshaujla93@gmail.com");
+		confirmEmailInput.sendKeys(randomEmail);
 
-		usernameInput.sendKeys("Arsh123");
+		usernameInput.sendKeys(randomdata.getUsername());
 
-		passwordInput.sendKeys("Arsh2214.");
+		passwordInput.sendKeys(randomPassword);
 
-		confirmPasswordInput.sendKeys("Arsh2214.");
+		confirmPasswordInput.sendKeys(randomPassword);
 
 		termsAndConditionLink.click();
 
@@ -83,6 +91,26 @@ public class TestLoginPage {
 
 		driver.close();
 
+	}
+
+	private void browserSetup() {
+		switch (browser) {
+		case "chrome":
+			WebDriverManager.chromedriver().setup();
+			driver = new ChromeDriver();
+			break;
+		case "firefox":
+			WebDriverManager.firefoxdriver().setup();
+			driver = new FirefoxDriver();
+			break;
+		case "edgedriver":
+			WebDriverManager.edgedriver().setup();
+			driver = new EdgeDriver();
+			break;
+		default:
+			throw new InvalidArgumentException("browser value is invalid " + browser);
+
+		}
 	}
 
 }
